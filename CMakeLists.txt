@@ -1,8 +1,14 @@
 cmake_minimum_required(VERSION 4.3)
+
 project(Boannt)
+
 add_executable(${PROJECT_NAME} src/main.cpp)
+
 add_executable(chunkEXE src/world/chunk.cpp)
+
 add_library(random_engine src/core/random_engine.cpp)
+
 target_link_libraries(${PROJECT_NAME} PRIVATE random_engine)
 target_link_libraries(chunkEXE PRIVATE random_engine)
+
 target_include_directories(random_engine PUBLIC src)
