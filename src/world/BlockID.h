@@ -4,5 +4,6 @@ enum class BlockID{
     STONE,
     DIRT,
     GRASS,
-    ORE
+    ORE,
+    NONE
 };

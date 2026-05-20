@@ -2,13 +2,16 @@ cmake_minimum_required(VERSION 4.3)
 
 project(Boannt)
 
-add_executable(${PROJECT_NAME} src/main.cpp)
-
-add_executable(chunkEXE src/world/chunk.cpp)
 
 add_library(random_engine src/core/random_engine.cpp)
+add_library(perlin_noise src/core/perlin_noise.cpp)
+add_library(world_lib src/world/chunk.cpp src/world/terrain_gen.cpp)
 
-target_link_libraries(${PROJECT_NAME} PRIVATE random_engine)
-target_link_libraries(chunkEXE PRIVATE random_engine)
+target_link_libraries(world_lib PRIVATE perlin_noise random_engine)
 
+target_include_directories(perlin_noise PUBLIC src)
+target_include_directories(world_lib PUBLIC src)
 target_include_directories(random_engine PUBLIC src)
+
+add_executable(${PROJECT_NAME} src/main.cpp)
+target_link_libraries(${PROJECT_NAME} PRIVATE world_lib perlin_noise random_engine)
