@@ -52,6 +52,8 @@ public:
 
 	vector<int> getSurfaceDepths();
 
+	vector<int> getDirtDepths();
+
 	void fillChunk(BlockID block);
 
 	void print();

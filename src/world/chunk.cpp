@@ -25,6 +25,7 @@ void Chunk::fillChunk(BlockID block)
 	}
 }
 
+
 BlockID Chunk::getBlock(int y, int x)
 {
 	if (Chunk::isValidBlockPosition(y, x))
@@ -50,6 +51,12 @@ int Chunk::getChunkHeight()
 vector<int> Chunk::getSurfaceDepths()
 {
 	vector<int> depth = {Chunk::surface_depth.min, Chunk::surface_depth.max};
+	return depth;
+}
+
+vector<int> Chunk::getDirtDepths()
+{
+	vector<int> depth = {Chunk::dirt_depth.min, Chunk::dirt_depth.max};
 	return depth;
 }
 
@@ -89,7 +96,8 @@ void Chunk::print()
 			}
 			case BlockID::AIR:
 			{
-				cout << "  ";
+				//cout << "  ";
+				cout << ". ";
 				break;
 			}
 			default:
