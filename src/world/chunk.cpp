@@ -5,6 +5,8 @@
 #include "world/BlockID.h"
 #include "chunk.h"
 #include "terrain_gen.h"
+#include "cave_gen.h"
+
 
 using namespace std;
 
@@ -13,6 +15,8 @@ void Chunk::setBlock(int y, int x, BlockID block)
 	if (isValidBlockPosition(y, x))
 		Chunk::blocks.at(y).at(x) = block;
 }
+
+
 
 void Chunk::fillChunk(BlockID block)
 {
@@ -52,6 +56,12 @@ vector<int> Chunk::getSurfaceDepths()
 {
 	vector<int> depth = {Chunk::surface_depth.min, Chunk::surface_depth.max};
 	return depth;
+}
+
+vector<int> Chunk::getChunkOffsets()
+{
+	vector<int> offsets = {Chunk::chunkOffset.X,Chunk::chunkOffset.Y};
+	return offsets;
 }
 
 vector<int> Chunk::getDirtDepths()
@@ -97,7 +107,7 @@ void Chunk::print()
 			case BlockID::AIR:
 			{
 				//cout << "  ";
-				cout << ". ";
+				cout << "  ";
 				break;
 			}
 			default:
@@ -127,6 +137,8 @@ void Chunk::generate()
 
 	generateTerrain(*this);
 
+	generateCaves(*this);
+
 	generateSpawn();
 }
 
@@ -138,10 +150,13 @@ void Chunk::generateSpawn()
 	Chunk::spawnP.Y = Chunk::surfaces.at(rC);
 }
 
-Chunk::Chunk(int height, int width, int min_surface_depth, int max_surface_depth, int min_dirt_depth, int max_dirt_depth)
+Chunk::Chunk(int height, int width, int min_surface_depth, int max_surface_depth, int min_dirt_depth, int max_dirt_depth, int chunkOffsetX, int chunkOffsetY)
 {
 	Chunk::chunkHeight = height;
 	Chunk::chunkWidth = width;
+
+	Chunk::chunkOffset.X = chunkOffsetX;
+	Chunk::chunkOffset.Y = chunkOffsetY;
 
 	Chunk::surfaces.resize(Chunk::chunkWidth);
 	Chunk::blocks.resize(Chunk::chunkHeight, vector<BlockID>(Chunk::chunkWidth));
