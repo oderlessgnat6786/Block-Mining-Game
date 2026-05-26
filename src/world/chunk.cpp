@@ -110,6 +110,11 @@ void Chunk::print()
 				cout << "  ";
 				break;
 			}
+			case BlockID::BARRIER:
+			{
+				cout << "󰯮 ";
+				break;
+			}
 			default:
 			{
 				cout << "? ";

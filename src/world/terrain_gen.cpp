@@ -30,6 +30,26 @@ float sample(float x, float y, int width, int height, int n)
     return val;
 }
 
+float sample(float x, float y, int width, int height, int n, int multiply)
+{
+
+    float freq = 1;
+    float amp = 1.25;
+    float val = 0;
+
+    for (int i = 0; i < n; i++)
+    {
+        val += perlin(x * freq/width , y * freq/height) * amp;
+
+        freq *= 2;
+        amp /= 2;
+    }
+
+    val *= multiply;
+
+    return val;
+}
+
 void generateSurfaceMap(Chunk &chunk)
 {
     vector<int> surfaceDepth = chunk.getSurfaceDepths();
@@ -37,26 +57,26 @@ void generateSurfaceMap(Chunk &chunk)
     vector<int> offsets = chunk.getChunkOffsets();
     for (int i = 0; i < vec.size(); i++)
     {
-        float intensity = sample(i * scale + offsets.at(0)*scale, 0, chunk.getChunkWidth(), chunk.getChunkHeight(), sampler);
+        float intensity = sample((i + offsets.at(0))*scale, 0, chunk.getChunkWidth(), chunk.getChunkHeight(), sampler);
 
         int surface_depth = surfaceDepth.at(0) + intensity;
 
-        /*if (surface_depth > surfaceDepth.at(1))
+        if (surface_depth > surfaceDepth.at(1))
              surface_depth = surfaceDepth.at(1);
          else if (surface_depth < surfaceDepth.at(0))
-             surface_depth = surfaceDepth.at(0);*/
+             surface_depth = surfaceDepth.at(0);
         vec.at(i) = chunk.getChunkHeight() - surface_depth;
     }
     chunk.setSurfaces(vec);
 }
 
-int getDirtDepth(int x, int surfaceIndex, int width, int height, int min, int max)
+int getDirtDepth(int y, int surfaceIndex, int width, int height, int min, int max)
 {
     int depth;
 
     int old_min = -50, old_max = 50;
 
-    float intensity = sample(0, (float)x * scale, width, height, sampler);
+    float intensity = sample(0, ((float)y+500.0f) * scale, width, height, sampler,5);
 
     float map = min + (((intensity - old_min) * (max - min)) / (old_max - old_min));
 
@@ -89,6 +109,8 @@ void generateTerrain(Chunk &chunk)
                 chunk.setBlock(i, j, BlockID::AIR);
             else if (i > surface && i <= dirtDepth)
                 chunk.setBlock(i, j, BlockID::DIRT);
+            else if (i == chunk.getChunkHeight()-1)
+                chunk.setBlock(i,j,BlockID::BARRIER);
             else
                 chunk.setBlock(i, j, BlockID::STONE);
         }
