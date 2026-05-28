@@ -2,7 +2,7 @@
 #include <vector>
 
 #include "core/random_engine.h"
-#include "world/BlockID.h"
+#include "types/BlockID.h"
 #include "chunk.h"
 #include "terrain_gen.h"
 #include "cave_gen.h"

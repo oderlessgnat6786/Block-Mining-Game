@@ -2,6 +2,14 @@
 #include <thread>
 #include <atomic>
 
+#include "types/BlockID.h"
+#include "types/BlockType.h"
+#include "types/ItemID.h"
+
+#include "renderer/renderTileMap.h"
+
+
+
 void renderThread(sf::RenderWindow &window, std::atomic<bool> &running)
 {
 
@@ -14,30 +22,12 @@ void renderThread(sf::RenderWindow &window, std::atomic<bool> &running)
     sf::Texture texture("assets/textures/sfml.png");
     sf::Font font("assets/fonts/Roboto_Flex/RobotoFlex.ttf");
 
-
-    sf::Sprite sprite(texture);
-    sprite.setPosition({300.0f,300.0f});
-    sprite.setScale({0.1,0.1});
-
-    sf::Text txt(font);
-    txt.setString("Test");
-    txt.setCharacterSize(24);
-    txt.setFillColor(sf::Color::Black);
-    txt.setPosition({500.f,400.f});
-
-
-    sf::RectangleShape block({32,32});
-    block.setFillColor(sf::Color::Blue);
-    block.setPosition({200,200});
-
-
     while (running)
     {
         window.clear(sf::Color::White);
-
-        window.draw(sprite);
-        window.draw(txt);
-        window.draw(block);
+        
+        renderTileMap()
+        
         window.display();
     }
 }
@@ -45,7 +35,7 @@ void renderThread(sf::RenderWindow &window, std::atomic<bool> &running)
 int main()
 {
 
-    sf::RenderWindow window(sf::VideoMode({800, 600}), "Test");
+    sf::RenderWindow window(sf::VideoMode({1024, 1024}), "Test");
 
     window.setFramerateLimit(24);
 

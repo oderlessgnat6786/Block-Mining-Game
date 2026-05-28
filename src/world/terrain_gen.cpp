@@ -2,7 +2,7 @@
 #include "core/perlin_noise.h"
 #include <vector>
 #include "chunk.h"
-#include "BlockID.h"
+#include "types/BlockID.h"
 #include "core/random_engine.h"
 using namespace std;
 

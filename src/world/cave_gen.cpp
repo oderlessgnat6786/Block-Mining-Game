@@ -3,7 +3,7 @@
 #include <vector>
 #include "chunk.h"
 #include <iostream>
-#include "BlockID.h"
+#include "types/BlockID.h"
 
 const static int sampler = 4;
 const static float scale = 0.08;

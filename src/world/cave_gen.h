@@ -1,4 +1,4 @@
-#include "BlockID.h"
+#include "types/BlockID.h"
 
 class Chunk;
 

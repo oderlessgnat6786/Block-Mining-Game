@@ -1,5 +1,5 @@
 #include <vector>
-#include "BlockID.h"
+#include "types/BlockID.h"
 //#include "chunk.cpp"
 #pragma once
 using namespace std;
