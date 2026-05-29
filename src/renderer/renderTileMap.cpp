@@ -12,7 +12,7 @@ void renderChunk(Chunk &chunk, sf::Texture &tileset, sf::RenderWindow &window)
     sf::Sprite blockSprite(tileset);
     for (int i = 0; i < chunk.getChunkHeight(); i++)
     {
-        for (int j = 0; i < chunk.getChunkWidth(); j++)
+        for (int j = 0; j < chunk.getChunkWidth(); j++)
         {
             BlockID id = chunk.getBlock(i,j);
             const Block& block = Registry.getBlockDefinition(id);

@@ -8,7 +8,7 @@ add_library(random_engine src/core/random_engine.cpp)
 add_library(perlin_noise src/core/perlin_noise.cpp)
 add_library(world_lib src/world/chunk.cpp src/world/terrain_gen.cpp src/world/cave_gen.cpp)
 add_library(blocks src/blocks/block.cpp src/blocks/BlockRegistry.cpp)
-add_library(renderer src/renderer/renderBlock.cpp src/renderer/renderTileMap.cpp)
+add_library(renderer src/renderer/renderBlock.cpp src/renderer/renderTileMap.cpp src/renderer/camera.cpp)
 
 target_link_libraries(world_lib PRIVATE perlin_noise random_engine)
 target_link_libraries(renderer PRIVATE blocks world_lib SFML::Graphics)

@@ -58,6 +58,8 @@ public:
 
 	vector<int> getDirtDepths();
 
+	vector<int> getSpawnPos();
+
 	vector<int> getChunkOffsets();
 
 	void fillChunk(BlockID block);

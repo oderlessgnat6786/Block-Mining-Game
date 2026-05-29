@@ -175,3 +175,8 @@ Chunk::Chunk(int height, int width, int min_surface_depth, int max_surface_depth
 	Chunk::generate();
 }
 
+vector<int> Chunk::getSpawnPos()
+{
+	vector<int> pos = {spawnP.X,spawnP.Y};
+	return pos;
+}

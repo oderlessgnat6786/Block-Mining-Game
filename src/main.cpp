@@ -11,6 +11,10 @@
 #include "types/ItemID.h"
 
 #include "renderer/renderTileMap.h"
+#include "renderer/camera.h"
+
+const int TILE_SIZE = 32;
+const int blockRadius = 10;
 
 void renderThread(sf::RenderWindow& window, std::atomic<bool>& running, Chunk& chunk)
 {
@@ -29,22 +33,33 @@ void renderThread(sf::RenderWindow& window, std::atomic<bool>& running, Chunk& c
 		return;
 	}
 
+	sf::View camera;
+
+	std::vector<int> pos = chunk.getSpawnPos();
+
+	struct{
+		float X,Y;
+	} cameraPos;
+
+	cameraPos.X = (float)pos.at(0)*TILE_SIZE + (float)TILE_SIZE/2.f;
+	cameraPos.Y = (float)pos.at(1)*TILE_SIZE + (float)TILE_SIZE/2.f;
+
 
 	while (running)
 	{
 
-		window.clear(sf::Color::White);
-		std::cerr << "[2] Window cleared..." << std::endl;
+		window.clear(sf::Color{214, 215, 255});
+		renderCamera(window,camera,sf::Vector2f(cameraPos.X,cameraPos.Y),TILE_SIZE,blockRadius);
 		renderChunk(chunk,tileset,window);
-		std::cerr << "[3] Window cleared..." << std::endl;
 		window.display();
 	}
+
+	window.setActive(false);
+
 }
 
 int main()
 {
-
-	sf::Texture tileset("assets/textures/blocks.png");	
 
 	int ar[8];
 	for (int i = 0; i < 8; i++)
@@ -53,8 +68,8 @@ int main()
 	// Chunk ob = Chunk(32,100,5,28,2,6);
 
 	Chunk ob = Chunk(ar[0], ar[1], ar[2], ar[3], ar[4], ar[5], ar[6], ar[7]);
-
-	sf::RenderWindow window(sf::VideoMode({1024, 1024}), "Test",sf::Style::Close);
+	ob.print();
+	sf::RenderWindow window(sf::VideoMode({1024,1024}), "Test",sf::Style::Close);
 
 	window.setFramerateLimit(24);
 
