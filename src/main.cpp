@@ -12,50 +12,66 @@
 
 #include "renderer/renderTileMap.h"
 #include "renderer/camera.h"
+#include "renderer/renderPlayer.h"
+
+#include "core/player.h"
 
 const int TILE_SIZE = 32;
 const int blockRadius = 10;
 
-void renderThread(sf::RenderWindow& window, std::atomic<bool>& running, Chunk& chunk)
+void renderThread(sf::RenderWindow &window, std::atomic<bool> &running, Chunk &chunk, Player& plr)
 {
 
 	if (!window.setActive(true))
 	{
-		
+
 		running = false;
 		return;
 	}
 
 	sf::Texture tileset;
-	if (!tileset.loadFromFile("assets/textures/blocks.png")){
-		
+	if (!tileset.loadFromFile("assets/textures/blocks.png"))
+	{
+
+		running = false;
+		return;
+	}
+
+	sf::Texture playerTexture;
+	if (!playerTexture.loadFromFile("assets/textures/player.png"))
+	{
 		running = false;
 		return;
 	}
 
 	sf::View camera;
 
-	std::vector<int> pos = chunk.getSpawnPos();
+	sf::Sprite player(playerTexture);
 
-	struct{
-		float X,Y;
+	sf::Vector2f pos = plr.getPos();
+
+	struct
+	{
+		float X, Y;
 	} cameraPos;
 
-	cameraPos.X = (float)pos.at(0)*TILE_SIZE + (float)TILE_SIZE/2.f;
-	cameraPos.Y = (float)pos.at(1)*TILE_SIZE + (float)TILE_SIZE/2.f;
-
+	cameraPos.X = pos.x + (float)TILE_SIZE / 2.f;
+	cameraPos.Y = pos.y + (float)TILE_SIZE / 2.f;
 
 	while (running)
 	{
 
 		window.clear(sf::Color{214, 215, 255});
-		renderCamera(window,camera,sf::Vector2f(cameraPos.X,cameraPos.Y),TILE_SIZE,blockRadius);
-		renderChunk(chunk,tileset,window);
+		renderCamera(window, camera, sf::Vector2f(cameraPos.X, cameraPos.Y), TILE_SIZE, blockRadius);
+
+		renderChunk(chunk, tileset, window);
+
+		renderPlayer(window,plr.getPos(),TILE_SIZE,player);
+		
 		window.display();
 	}
 
 	window.setActive(false);
-
 }
 
 int main()
@@ -69,7 +85,12 @@ int main()
 
 	Chunk ob = Chunk(ar[0], ar[1], ar[2], ar[3], ar[4], ar[5], ar[6], ar[7]);
 	ob.print();
-	sf::RenderWindow window(sf::VideoMode({1024,1024}), "Test",sf::Style::Close);
+
+	std::vector<int> pos = ob.getSpawnPos();
+
+	Player plr(sf::Vector2i({pos.at(0),pos.at(1)}),100);
+
+	sf::RenderWindow window(sf::VideoMode({1024, 1024}), "Boannt", sf::Style::Close);
 
 	window.setFramerateLimit(24);
 
@@ -80,20 +101,19 @@ int main()
 
 	std::atomic<bool> running(1);
 
-	
-	std::thread render(renderThread, std::ref(window), std::ref(running), std::ref(ob));
+	std::thread render(renderThread, std::ref(window), std::ref(running), std::ref(ob), std::ref(plr));
 
 	while (window.isOpen())
 	{
 		/* code */
-		//std::cout << "main thread running" << std::endl;
+		// std::cout << "main thread running" << std::endl;
 		while (const std::optional event = window.pollEvent())
 		{
 			if (event->is<sf::Event::Closed>())
 			{
 
 				running = false;
-				
+
 				render.join();
 
 				window.close();
