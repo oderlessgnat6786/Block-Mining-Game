@@ -145,28 +145,34 @@ void Chunk::generate()
 
 void Chunk::generateSpawn()
 {
-	// Find random columm
-	// vector<int> col = surfaces;
 	vector<int> eligibleSurfaces;
+	vector<int> fallbackSurfaces;
 	int i = 0;
 	while (i < surfaces.size())
 	{
 		int y = surfaces.at(i);
 		int x = i;
-		if (getBlock(y - 1, x) == BlockID::AIR && getBlock(y - 2, x) == BlockID::AIR) // minimum height of 2 air blocks
+		if (getBlock(y - 1, x) == BlockID::AIR) 
 		{
-			eligibleSurfaces.push_back(x);
+			if(getBlock(y - 2, x) == BlockID::AIR) // minimum height of 2 air blocks
+				eligibleSurfaces.push_back(x);
+			else //min height of 1 air block
+				fallbackSurfaces.push_back(x);
 		}
 		i++;
-
-	} // 5 4 1 2 4   {0,2,4}
+	}
 
 	if (!eligibleSurfaces.empty())
 	{
 		int rC = randINT(0, eligibleSurfaces.size() - 1);
 		spawnP.X = eligibleSurfaces.at(rC);
 		spawnP.Y = surfaces.at(eligibleSurfaces.at(rC))-1;
-	}else{
+	} else if (!fallbackSurfaces.empty()){
+		int rC = randINT(0, fallbackSurfaces.size() - 1);
+		spawnP.X = fallbackSurfaces.at(rC);
+		spawnP.Y = surfaces.at(fallbackSurfaces.at(rC))-1;
+	}
+	else{
 		int rC = randINT(0, surfaces.size() - 1);
 		spawnP.X = rC;
 		spawnP.Y = surfaces.at(rC);

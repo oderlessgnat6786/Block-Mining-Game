@@ -17,6 +17,14 @@ sf::Vector2f Player::getPos(){
     return pos;
 }
 
+sf::Vector2f Player::getVelocity(){
+    return velocity;
+}
+
+void Player::setVelocity(sf::Vector2f velocity){
+    this->velocity = pos;
+}
+
 void Player::updatePos(sf::Vector2f pos){
     this->pos = pos;
     blockPos = sf::Vector2i({(int)pos.x/TILE_SIZE,(int)pos.y/TILE_SIZE});

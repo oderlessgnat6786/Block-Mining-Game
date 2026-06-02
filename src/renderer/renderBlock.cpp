@@ -5,9 +5,9 @@
 #include "blocks/block.h"
 #include "renderBlock.h"
 
-sf::Texture tileset("assets/textures/blocks.png");
+#include "core/constants.h"
 
-const int TILE_SIZE = 32;
+sf::Texture tileset("assets/textures/blocks.png");
 
 void renderBlock(const Block &block, sf::RenderWindow &window, sf::Sprite &blockSprite, sf::Vector2i &pos)
 {
