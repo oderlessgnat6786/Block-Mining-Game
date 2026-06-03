@@ -11,11 +11,14 @@ add_library(blocks src/blocks/block.cpp src/blocks/BlockRegistry.cpp)
 add_library(renderer src/renderer/renderBlock.cpp src/renderer/renderTileMap.cpp src/renderer/camera.cpp src/renderer/renderPlayer.cpp src/renderer/renderWindow.cpp)
 add_library(player src/entities/player.cpp)
 add_library(filepaths src/core/filepaths.cpp)
+add_library(inputs src/input/keyboard_input.cpp)
+add_library(updater src/core/updater.cpp)
 
 target_link_libraries(world_lib PRIVATE perlin_noise random_engine)
 target_link_libraries(renderer PRIVATE blocks world_lib SFML::Graphics filepaths)
 target_link_libraries(player PRIVATE SFML::Graphics renderer)
-
+target_link_libraries(inputs PRIVATE player SFML::Graphics)
+target_link_libraries(updater PRIVATE player SFML::Graphics)
 
 target_include_directories(perlin_noise PUBLIC src)
 target_include_directories(world_lib PUBLIC src)
@@ -23,7 +26,7 @@ target_include_directories(random_engine PUBLIC src)
 target_include_directories(blocks PUBLIC src)
 target_include_directories(renderer PUBLIC src)
 target_include_directories(player PUBLIC src)
-
+target_include_directories(inputs PUBLIC src)
 
 add_executable(${PROJECT_NAME} src/main.cpp)
-target_link_libraries(${PROJECT_NAME} PRIVATE filepaths world_lib perlin_noise renderer random_engine player SFML::Graphics SFML::Audio SFML::Network)
+target_link_libraries(${PROJECT_NAME} PRIVATE inputs filepaths updater world_lib perlin_noise renderer random_engine player SFML::Graphics SFML::Audio SFML::Network)

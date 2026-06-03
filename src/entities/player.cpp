@@ -1,16 +1,28 @@
 #include "player.h"
 #include <SFML/Graphics.hpp>
+#include "core/constants.h"
 
-const int TILE_SIZE = 32;
-
-Player::Player(sf::Vector2i spawnPos, int hp)
+Player::Player(sf::Vector2i spawnPos, int hp,float speed)
 {
+    this->speed = speed;
     blockPos = spawnPos;
     this->hp = hp;
     pos = sf::Vector2f({(float)blockPos.x*TILE_SIZE,(float)blockPos.y*TILE_SIZE});
 }
 sf::Vector2i Player::getBlockPos(){
     return blockPos;
+}
+
+void Player::setVelocity_X(float x){
+    this->velocity.x = x;
+}
+
+float Player::getSpeed(){
+    return speed;
+}
+
+void Player::setVelocity_Y(float y){
+    velocity.y = y;
 }
 
 sf::Vector2f Player::getPos(){
@@ -22,7 +34,15 @@ sf::Vector2f Player::getVelocity(){
 }
 
 void Player::setVelocity(sf::Vector2f velocity){
-    this->velocity = pos;
+    this->velocity = velocity;
+}
+
+void Player::setDirection(Direction direction){
+    this->direction = direction;
+}
+
+Direction Player::getDirection(){
+    return direction;
 }
 
 void Player::updatePos(sf::Vector2f pos){

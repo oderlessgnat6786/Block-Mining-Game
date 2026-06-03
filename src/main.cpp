@@ -12,25 +12,20 @@
 #include "types/BlockType.h"
 #include "types/ItemID.h"
 
-#include "renderer/renderTileMap.h"
-#include "renderer/camera.h"
-#include "renderer/renderPlayer.h"
+// #include "renderer/renderTileMap.h"
+// #include "renderer/camera.h"
+// #include "renderer/renderPlayer.h"
 #include "renderer/renderWindow.h"
 
 #include "entities/player.h"
 
 #include "core/constants.h"
-
 #include "core/filepaths.h"
+#include "core/updater.h"
 
-void movePlayer(Player& plr, sf::Vector2f distance){
-	sf::Vector2f pos = plr.getPos();
-	pos.x = pos.x + distance.x;
-	pos.y = pos.y + distance.y;
-	plr.updatePos(pos);
-}
+#include "input/keyboard_input.h"
 
-int main(int argI, char* args[])
+int main(int argI, char *args[])
 {
 	Filepaths::init(args[0]);
 
@@ -40,19 +35,14 @@ int main(int argI, char* args[])
 	// cout << "Height || Width || SURFACE DEPTHS (MIN || MAX) || DIRT DEPTHS (MIN || MAX) || CHUNK OFFSETS (X || Y)";
 	// Chunk ob = Chunk(32,100,5,28,2,6);
 
-
 	Chunk ob = Chunk(ar[0], ar[1], ar[2], ar[3], ar[4], ar[5], ar[6], ar[7]);
 	ob.print();
 
-
-
 	std::vector<int> pos = ob.getSpawnPos();
 
-	Player plr(sf::Vector2i({pos.at(0),pos.at(1)}),100);
+	Player plr(sf::Vector2i({pos.at(0), pos.at(1)}), 100,75.f);
 
-
-
-	sf::RenderWindow window(sf::VideoMode({WINDOW_WIDTH,WINDOW_HEIGHT}), gameTitle);
+	sf::RenderWindow window(sf::VideoMode({WINDOW_WIDTH, WINDOW_HEIGHT}), gameTitle);
 
 	window.setFramerateLimit(60);
 
@@ -63,12 +53,14 @@ int main(int argI, char* args[])
 
 	std::atomic<bool> running(1);
 
+	sf::Clock clock;
+
 	std::thread render(renderWindow, std::ref(window), std::ref(running), std::ref(ob), std::ref(plr));
 
 	while (window.isOpen())
 	{
-		/* code */
-		// std::cout << "main thread running" << std::endl;
+		float dt = clock.getElapsedTime().asSeconds(); // time elapsed since the last frame
+		clock.restart();
 		while (const std::optional event = window.pollEvent())
 		{
 			if (event->is<sf::Event::Closed>())
@@ -82,15 +74,17 @@ int main(int argI, char* args[])
 
 				break;
 			}
-			else if(const auto* keyPressed = event->getIf<sf::Event::KeyPressed>()){
-				if (keyPressed->scancode == sf::Keyboard::Scancode::D){
-					movePlayer(std::ref(plr),sf::Vector2f({1.0,0}));
-				}
-			}
+			// else if(const auto* keyPressed = event->getIf<sf::Event::KeyPressed>()){
+			// if (keyPressed->scancode == sf::Keyboard::Scancode::D){
+			//	movePlayer(std::ref(plr),sf::Vector2f({1.0,0}));
+			// }
+			//}
 		}
 
-
-		sf::sleep(sf::milliseconds(10));
+		input_Movement(std::ref(plr));
+		update(plr, dt);
+		sf::sleep(sf::Time(sf::milliseconds(1)));
+		
 	}
 
 	if (render.joinable())
