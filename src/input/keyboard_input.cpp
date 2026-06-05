@@ -41,7 +41,7 @@ void input_Movement(Player &plr)
         plr.setDirection(Direction::LEFT);
         x_intent += -sprint();
     }
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Scancode::W) && plr.getGrounded())
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Scancode::Space) && plr.getGrounded())
     {
         plr.setVelocity_Y(-plr.getJumpPower());
         plr.setGrounded(false);

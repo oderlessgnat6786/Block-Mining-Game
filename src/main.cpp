@@ -39,7 +39,7 @@ int main(int argI, char *args[])
 
 	sf::RenderWindow window(sf::VideoMode({WINDOW_WIDTH, WINDOW_HEIGHT}), gameTitle);
 
-	window.setFramerateLimit(60);
+	
 
 	if (!window.setActive(false))
 	{

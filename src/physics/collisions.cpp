@@ -6,8 +6,6 @@
 #include "types/BlockID.h"
 #include "types/Direction.h"
 
-#include <iostream>
-
 bool checkSOLID(BlockID block)
 {
     return (block != BlockID::AIR && block != BlockID::NONE);
