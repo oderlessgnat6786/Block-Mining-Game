@@ -2,13 +2,16 @@
 #include <SFML/Graphics.hpp>
 #include "core/constants.h"
 
-Player::Player(sf::Vector2i spawnPos, int hp,float speed)
+Player::Player(sf::Vector2i spawnPos, int hp,float speed, float jumpPower)
 {
     this->speed = speed;
     blockPos = spawnPos;
     this->hp = hp;
     pos = sf::Vector2f({(float)blockPos.x*TILE_SIZE,(float)blockPos.y*TILE_SIZE});
+    this->jumpPower = jumpPower;
+    onGround = true;
 }
+
 sf::Vector2i Player::getBlockPos(){
     return blockPos;
 }
@@ -31,6 +34,20 @@ sf::Vector2f Player::getPos(){
 
 sf::Vector2f Player::getVelocity(){
     return velocity;
+}
+
+float Player::getJumpPower(){
+    return jumpPower;
+}
+
+void Player::setGrounded(bool val)
+{
+    this->onGround = val;
+}
+
+bool Player::getGrounded()
+{
+    return onGround;
 }
 
 void Player::setVelocity(sf::Vector2f velocity){

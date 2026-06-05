@@ -12,12 +12,16 @@
 void renderWindow(sf::RenderWindow &window, std::atomic<bool> &running, Chunk &chunk, Player& plr)
 {
 
+
+
 	if (!window.setActive(true))
 	{
 
 		running = false;
 		return;
 	}
+
+	window.setFramerateLimit(60);
 
 	sf::Texture tileset;
 	if (!tileset.loadFromFile(Filepaths::getAsset("textures/blocks.png")))

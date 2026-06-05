@@ -12,18 +12,13 @@
 #include "types/BlockType.h"
 #include "types/ItemID.h"
 
-// #include "renderer/renderTileMap.h"
-// #include "renderer/camera.h"
-// #include "renderer/renderPlayer.h"
 #include "renderer/renderWindow.h"
 
 #include "entities/player.h"
 
 #include "core/constants.h"
 #include "core/filepaths.h"
-#include "core/updater.h"
-
-#include "input/keyboard_input.h"
+#include "core/tick.h"
 
 int main(int argI, char *args[])
 {
@@ -40,7 +35,7 @@ int main(int argI, char *args[])
 
 	std::vector<int> pos = ob.getSpawnPos();
 
-	Player plr(sf::Vector2i({pos.at(0), pos.at(1)}), 100,75.f);
+	Player plr(sf::Vector2i({pos.at(0), pos.at(1)}), 100,75.f,500.f);
 
 	sf::RenderWindow window(sf::VideoMode({WINDOW_WIDTH, WINDOW_HEIGHT}), gameTitle);
 
@@ -53,14 +48,13 @@ int main(int argI, char *args[])
 
 	std::atomic<bool> running(1);
 
-	sf::Clock clock;
+
 
 	std::thread render(renderWindow, std::ref(window), std::ref(running), std::ref(ob), std::ref(plr));
+	std::thread tickThread(tickGameplay, std::ref(plr),std::ref(ob),std::ref(running));
 
 	while (window.isOpen())
 	{
-		float dt = clock.getElapsedTime().asSeconds(); // time elapsed since the last frame
-		clock.restart();
 		while (const std::optional event = window.pollEvent())
 		{
 			if (event->is<sf::Event::Closed>())
@@ -80,9 +74,6 @@ int main(int argI, char *args[])
 			// }
 			//}
 		}
-
-		input_Movement(std::ref(plr));
-		update(plr, dt);
 		sf::sleep(sf::Time(sf::milliseconds(1)));
 		
 	}
@@ -91,6 +82,12 @@ int main(int argI, char *args[])
 	{
 		running = false;
 		render.join();
+	}
+
+	if (tickThread.joinable())
+	{
+		running = false;
+		tickThread.join();
 	}
 
 	return 0;

@@ -16,10 +16,14 @@ private:
 
     int hp; // player health
 
+    float jumpPower; //jump power
+
+    bool onGround;
+
     Direction direction; // determines the players direction
 
 public:
-    Player(sf::Vector2i spawnPos, int hp, float speed);
+    Player(sf::Vector2i spawnPos, int hp, float speed, float jumpPower);
 
     sf::Vector2i getBlockPos();
     sf::Vector2f getPos();
@@ -30,6 +34,12 @@ public:
     void setVelocity_Y(float y);
 
     float getSpeed();
+
+    float getJumpPower();
+
+    void setGrounded(bool val);
+
+    bool getGrounded();
 
     void setVelocity(sf::Vector2f velocity);
     void updatePos(sf::Vector2f pos1);
