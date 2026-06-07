@@ -1,6 +1,7 @@
 #include "player.h"
 #include <SFML/Graphics.hpp>
 #include "core/constants.h"
+#include <cmath>
 
 Player::Player(sf::Vector2i spawnPos, int hp,float speed, float jumpPower)
 {
@@ -64,7 +65,7 @@ Direction Player::getDirection(){
 
 void Player::updatePos(sf::Vector2f pos){
     this->pos = pos;
-    blockPos = sf::Vector2i({(int)pos.x/TILE_SIZE,(int)pos.y/TILE_SIZE});
+    blockPos = sf::Vector2i({(int)std::floor(pos.x/TILE_SIZE),(int)std::floor(pos.y/TILE_SIZE)});
 }
 
 int Player::getHealth(){

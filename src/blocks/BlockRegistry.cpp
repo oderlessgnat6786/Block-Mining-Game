@@ -8,6 +8,7 @@
 BlockRegistry::BlockRegistry()
 {
     Registry.emplace(BlockID::AIR, Block(BlockID::AIR, -1, -1, 0.f, BlockType::GAS, ItemID::NONE));
+    //Registry.emplace(BlockID::BARRIER, Block(BlockID::BARRIER, 4, 0, 0.f, BlockType::ABSTRACT, ItemID::NONE));
     Registry.emplace(BlockID::BARRIER, Block(BlockID::BARRIER, 4, 0, 0.f, BlockType::ABSTRACT, ItemID::NONE));
     Registry.emplace(BlockID::DIRT, Block(BlockID::DIRT, 1, 0, 50.f, BlockType::ORGANIC, ItemID::NONE));
     Registry.emplace(BlockID::GRASS, Block(BlockID::GRASS, 0, 0, 50.f, BlockType::ORGANIC, ItemID::NONE));

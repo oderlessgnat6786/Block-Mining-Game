@@ -103,16 +103,17 @@ void generateTerrain(Chunk &chunk)
 
         for (int i = chunk.getChunkHeight() - 1; i >= 0; i--)
         {
-            if (i == surface)
+            if (i == 0 || j == chunk.getChunkWidth()-1 || i == chunk.getChunkHeight() - 1 || j == 0)
+                chunk.setBlock(i,j,BlockID::BARRIER);
+            else if (i == surface)
                 chunk.setBlock(i, j, BlockID::GRASS);
             else if (i < surface)
                 chunk.setBlock(i, j, BlockID::AIR);
             else if (i > surface && i <= dirtDepth)
                 chunk.setBlock(i, j, BlockID::DIRT);
-            else if (i == chunk.getChunkHeight()-1)
-                chunk.setBlock(i,j,BlockID::BARRIER);
             else
                 chunk.setBlock(i, j, BlockID::STONE);
+
         }
     }
 }

@@ -5,6 +5,7 @@
 #include "core/constants.h"
 #include "types/BlockID.h"
 #include "types/Direction.h"
+#include <cmath>
 
 bool checkSOLID(BlockID block)
 {
@@ -14,14 +15,14 @@ bool checkSOLID(BlockID block)
 void movePlayer_X(Player &plr, Chunk &chunk, float newPos)
 {
 
-    sf::Vector2i oldBlockPos = plr.getBlockPos();
+    sf::Vector2f pos = plr.getPos();
 
     float v = plr.getVelocity().x;
 
     float leadingEdge_X = v > 0 ? (newPos + TILE_SIZE) : newPos;
-    int X = (int)(leadingEdge_X / TILE_SIZE);
-    int bottomY = oldBlockPos.y;
-    int topY = bottomY - 1;
+    int X = (int)std::floor(leadingEdge_X / TILE_SIZE);
+    int bottomY = (int)std::floor(pos.y/TILE_SIZE);
+    int topY = bottomY-1;
 
     if (checkSOLID(chunk.getBlock(bottomY, X)) || checkSOLID(chunk.getBlock(topY, X)))
     {
@@ -41,12 +42,12 @@ void movePlayer_Y(Player &plr, Chunk &chunk, float newPos)
 
 
     float leadingEdge_Y = v > 0 ? (newPos + TILE_SIZE) : (newPos - TILE_SIZE);
-    int Y = (int)(leadingEdge_Y / TILE_SIZE);
+    int Y = (int)std::floor(leadingEdge_Y / TILE_SIZE);
 
-    int leftX = (int)(oldPos.x / TILE_SIZE);
+    int leftX = (int)std::floor(oldPos.x / TILE_SIZE);
 
 
-    int rightX = (int)((oldPos.x + TILE_SIZE - 1.f) / TILE_SIZE);
+    int rightX = (int)(std::floor)((oldPos.x + TILE_SIZE - 1.f) / TILE_SIZE);
 
  
 

@@ -47,7 +47,7 @@ void renderWindow(sf::RenderWindow &window, std::atomic<bool> &running, Chunk &c
 
 		window.clear(sf::Color{214, 215, 255});
 		
-		renderCamera(window, camera, plr.getPos(), TILE_SIZE, blockRadius);
+		renderCamera(window, camera, plr.getPos(), TILE_SIZE, blockRadius,chunk.getChunkWidth());
 
 		renderChunk(chunk, tileset, window);
 
