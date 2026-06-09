@@ -113,7 +113,6 @@ void generateTerrain(Chunk &chunk)
                 chunk.setBlock(i, j, BlockID::DIRT);
             else
                 chunk.setBlock(i, j, BlockID::STONE);
-
         }
     }
 }

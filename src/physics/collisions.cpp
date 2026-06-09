@@ -7,6 +7,7 @@
 #include "types/Direction.h"
 #include <cmath>
 
+
 bool checkSOLID(BlockID block)
 {
     return (block != BlockID::AIR && block != BlockID::NONE);
@@ -19,15 +20,25 @@ void movePlayer_X(Player &plr, Chunk &chunk, float newPos)
 
     float v = plr.getVelocity().x;
 
-    float leadingEdge_X = v > 0 ? (newPos + TILE_SIZE) : newPos;
-    int X = (int)std::floor(leadingEdge_X / TILE_SIZE);
-    int bottomY = (int)std::floor(pos.y/TILE_SIZE);
-    int topY = bottomY-1;
+    float oldleadingEdge_X = v > 0 ? (pos.x + TILE_SIZE) : pos.x;
+    float newleadingEdge_X = v > 0 ? (newPos + TILE_SIZE) : newPos;
 
-    if (checkSOLID(chunk.getBlock(bottomY, X)) || checkSOLID(chunk.getBlock(topY, X)))
+    int startX = (int)std::floor(oldleadingEdge_X / TILE_SIZE);
+    int endX = (int)std::floor(newleadingEdge_X / TILE_SIZE);
+
+    int topY = (int)std::floor((pos.y - TILE_SIZE)/TILE_SIZE);
+    int middleY = (int)std::floor(pos.y/TILE_SIZE);
+    int bottomY = (int)std::floor((pos.y + TILE_SIZE - 1.f)/TILE_SIZE);
+
+    int step = ((v > 0) ? 1 : -1);
+
+    for (int i = startX; i != endX + step; i += step)
     {
-
-        newPos = v > 0 ? (X * TILE_SIZE - TILE_SIZE) : (X * TILE_SIZE + TILE_SIZE);
+        if (checkSOLID(chunk.getBlock(bottomY, i)) || checkSOLID(chunk.getBlock(middleY, i)) || checkSOLID(chunk.getBlock(topY, i)))
+        {
+            newPos = v > 0 ? (i * TILE_SIZE - TILE_SIZE) : (i * TILE_SIZE + TILE_SIZE);
+            break;
+        }
     }
     plr.updatePos(sf::Vector2f({newPos, plr.getPos().y}));
 }
@@ -39,38 +50,44 @@ void movePlayer_Y(Player &plr, Chunk &chunk, float newPos)
     sf::Vector2f oldPos = plr.getPos();
     float v = plr.getVelocity().y;
 
+    float oldleadingEdge_Y = v > 0 ? (oldPos.y + TILE_SIZE) : (oldPos.y - TILE_SIZE);
+    float newleadingEdge_Y = v > 0 ? (newPos + TILE_SIZE) : (newPos - TILE_SIZE);
 
+    int startY = (int)std::floor(oldleadingEdge_Y / TILE_SIZE);
+    int endY = (int)std::floor(newleadingEdge_Y / TILE_SIZE);
 
-    float leadingEdge_Y = v > 0 ? (newPos + TILE_SIZE) : (newPos - TILE_SIZE);
-    int Y = (int)std::floor(leadingEdge_Y / TILE_SIZE);
+    bool hitfloor = false;
 
     int leftX = (int)std::floor(oldPos.x / TILE_SIZE);
 
-
     int rightX = (int)(std::floor)((oldPos.x + TILE_SIZE - 1.f) / TILE_SIZE);
 
- 
+    int step = ((v > 0) ? 1 : -1);
 
-    if (checkSOLID(chunk.getBlock(Y, leftX)) || checkSOLID(chunk.getBlock(Y, rightX)))
+    for (int i = startY; i != endY + step; i += step)
     {
-        plr.setVelocity_Y(0);
-        if (v > 0)
-        {
-            newPos = (Y * TILE_SIZE - TILE_SIZE);
-            plr.setGrounded(true);
-        }
-        else if (v < 0)
-        {
 
-            newPos = (Y * TILE_SIZE + 2 * TILE_SIZE);
+        if (checkSOLID(chunk.getBlock(i, leftX)) || checkSOLID(chunk.getBlock(i, rightX)))
+        {
+            plr.setVelocity_Y(0);
+            if (v > 0)
+            {
+                newPos = (i * TILE_SIZE - TILE_SIZE);
+                plr.setGrounded(true);
+                hitfloor = true;
+            }
+            else if (v < 0)
+            {
+
+                newPos = (i * TILE_SIZE + 2 * TILE_SIZE);
+            }
+            break;
         }
     }
-    else
+
+    if (!hitfloor && v > 0.1f)
     {
-        if (v > 0.1f)
-        {
-            plr.setGrounded(false);
-        }
+        plr.setGrounded(false);
     }
 
     plr.updatePos(sf::Vector2f({oldPos.x, newPos}));

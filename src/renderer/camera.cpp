@@ -15,7 +15,7 @@ void renderCamera(sf::RenderWindow& window, sf::View& camera, sf::Vector2f targe
 	cameraPos.y = target_pos.y + (float)TILE_SIZE / 2.f;
 
     if (cameraPos.x < halfView + TILE_SIZE)
-        cameraPos.x = halfView + TILE_SIZE;
+       cameraPos.x = halfView + TILE_SIZE;
 
     if (cameraPos.x > chunkWidth*TILE_SIZE - halfView - TILE_SIZE)
         cameraPos.x = chunkWidth*TILE_SIZE - halfView - TILE_SIZE;
