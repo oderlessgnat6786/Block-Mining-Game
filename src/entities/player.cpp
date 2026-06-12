@@ -1,15 +1,17 @@
 #include "player.h"
 #include <SFML/Graphics.hpp>
 #include "core/constants.h"
+#include "physics/unitConverter.h"
 #include <cmath>
 
 Player::Player(sf::Vector2i spawnPos, int hp,float speed, float jumpPower)
 {
-    this->speed = speed;
+    //this->speed = speed;
+    this->speed = convertToBlockUnits(speed);
     blockPos = spawnPos;
     this->hp = hp;
     pos = sf::Vector2f({(float)blockPos.x*TILE_SIZE,(float)blockPos.y*TILE_SIZE});
-    this->jumpPower = jumpPower;
+    this->jumpPower = std::sqrt(2*GRAVITY*convertToBlockUnits(jumpPower));
     onGround = true;
 }
 

@@ -35,7 +35,7 @@ int main(int argI, char *args[])
 
 	std::vector<int> pos = ob.getSpawnPos();
 
-	Player plr(sf::Vector2i({pos.at(0), pos.at(1)}), 100,250.f,1200.f);
+	Player plr(sf::Vector2i({pos.at(0), pos.at(1)}), 100,/*250.f*/2.f,/*1200.f*/2.f);
 
 	sf::RenderWindow window(sf::VideoMode({WINDOW_WIDTH, WINDOW_HEIGHT}), gameTitle);
 

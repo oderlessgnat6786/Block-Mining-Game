@@ -13,7 +13,7 @@ add_library(player src/entities/player.cpp)
 add_library(filepaths src/core/filepaths.cpp)
 add_library(inputs src/input/keyboard_input.cpp)
 add_library(updater src/core/updater.cpp)
-add_library(physics src/physics/collisions.cpp src/physics/movement.cpp)
+add_library(physics src/physics/collisions.cpp src/physics/movement.cpp src/physics/unitConverter.cpp)
 add_library(gameplay src/core/tick.cpp)
 
 target_link_libraries(world_lib PRIVATE perlin_noise random_engine)
