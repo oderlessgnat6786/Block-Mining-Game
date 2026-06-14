@@ -5,8 +5,6 @@
 #include <iostream>
 #include "types/BlockID.h"
 
-#include "core/constants.h"
-
 const static int sampler = 4;
 const static float scale = 0.08;
 const static float multiplier = 50;

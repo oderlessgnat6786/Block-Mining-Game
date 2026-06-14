@@ -6,14 +6,11 @@
 #include "renderer/renderTileMap.h"
 #include "renderer/camera.h"
 #include "renderer/renderPlayer.h"
-#include "core/constants.h"
+#include "core/configParser.h"
 #include "core/filepaths.h"
 
 void renderWindow(sf::RenderWindow &window, std::atomic<bool> &running, Chunk &chunk, Player& plr)
 {
-
-
-
 	if (!window.setActive(true))
 	{
 
@@ -47,11 +44,11 @@ void renderWindow(sf::RenderWindow &window, std::atomic<bool> &running, Chunk &c
 
 		window.clear(sf::Color{214, 215, 255});
 		
-		renderCamera(window, camera, plr.getPos(), TILE_SIZE, blockRadius,chunk.getChunkWidth());
+		renderCamera(window, camera, plr.getPos(), Engine_Constants::getTileSize(),User_Settings::getBlockRadius(),chunk.getChunkWidth());
 
 		renderChunk(chunk, tileset, window);
 
-		renderPlayer(window,plr.getPos(),TILE_SIZE,playerSprite);
+		renderPlayer(window,plr.getPos(),Engine_Constants::getTileSize(),playerSprite);
 		
 		window.display();
 	}

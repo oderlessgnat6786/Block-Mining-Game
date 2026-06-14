@@ -2,12 +2,12 @@
 #include "entities/player.h"
 #include "world/chunk.h"
 #include "collisions.h"
-#include "core/constants.h"
+#include "core/configParser.h"
 #include <cmath>
 
 int calculateSteps(float d)
 {
-    return (int)std::ceil((d + safe_step) / safe_step);
+    return (int)std::ceil((d + Engine_Constants::getSafeStep()) / Engine_Constants::getSafeStep());
 }
 
 void updatePos(Player &plr, Chunk &chunk, float dt)
@@ -19,8 +19,8 @@ void updatePos(Player &plr, Chunk &chunk, float dt)
     // Find magnitude of maximum displacements in x and y axes
     float max_dx = (plr.getSpeed() * velocity.x) * dt; // X
     
-    float projected_Vy = velocity.y + GRAVITY*dt; // Y
-    projected_Vy = (projected_Vy > FALL_SPEED) ? FALL_SPEED : projected_Vy;
+    float projected_Vy = velocity.y + Engine_Constants::getGravity()*dt; // Y
+    projected_Vy = (projected_Vy > Engine_Constants::getFallSpeed()) ? Engine_Constants::getFallSpeed() : projected_Vy;
     
     float max_dy = projected_Vy*dt;
 
@@ -39,9 +39,9 @@ void updatePos(Player &plr, Chunk &chunk, float dt)
         pos.x += dx;
         movePlayer_X(plr,chunk,pos.x);
 
-        velocity.y += GRAVITY*subDt;
+        velocity.y += Engine_Constants::getGravity()*subDt;
 
-        velocity.y = (velocity.y > FALL_SPEED)?FALL_SPEED:velocity.y;
+        velocity.y = (velocity.y > Engine_Constants::getFallSpeed())?Engine_Constants::getFallSpeed():velocity.y;
 
         plr.setVelocity_Y(velocity.y);
 

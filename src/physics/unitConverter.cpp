@@ -1,8 +1,8 @@
 #include "unitConverter.h"
-#include "core/constants.h"
+#include "core/configParser.h"
 
 
 float convertToBlockUnits(float val)
 {
-    return val*TILE_SIZE;
+    return val*Engine_Constants::getTileSize();
 }

@@ -1,4 +1,3 @@
-#include <iostream>
 #include <string>
 
 #include <world/chunk.h>
@@ -16,30 +15,23 @@
 
 #include "entities/player.h"
 
-#include "core/constants.h"
+#include "core/configParser.h"
 #include "core/filepaths.h"
 #include "core/tick.h"
 
 int main(int argI, char *args[])
 {
 	Filepaths::init(args[0]);
+	User_Settings::load();
+	Engine_Constants::load();
 
-	int ar[8];
-	for (int i = 0; i < 8; i++)
-		std::cin >> ar[i];
-	// cout << "Height || Width || SURFACE DEPTHS (MIN || MAX) || DIRT DEPTHS (MIN || MAX) || CHUNK OFFSETS (X || Y)";
-	// Chunk ob = Chunk(32,100,5,28,2,6);
-
-	Chunk ob = Chunk(ar[0], ar[1], ar[2], ar[3], ar[4], ar[5], ar[6], ar[7]);
-	ob.print();
+	Chunk ob = Chunk(Engine_Constants::getChunkHeight(),Engine_Constants::getChunkWidth(),Engine_Constants::getSurfaceMin(),Engine_Constants::getSurfaceMax(),Engine_Constants::getDirtMin(),Engine_Constants::getDirtMax(),Engine_Constants::getOffsetX(),Engine_Constants::getOffsetY());
 
 	std::vector<int> pos = ob.getSpawnPos();
 
-	Player plr(sf::Vector2i({pos.at(0), pos.at(1)}), 100,/*250.f*/2.f,/*1200.f*/2.f);
+	Player plr(sf::Vector2i({pos.at(0), pos.at(1)}),Engine_Constants::getHealth(),Engine_Constants::getSpeed(),Engine_Constants::getJumpPower());
 
-	sf::RenderWindow window(sf::VideoMode({WINDOW_WIDTH, WINDOW_HEIGHT}), gameTitle);
-
-	
+	sf::RenderWindow window(sf::VideoMode({User_Settings::getWindowWidth(),User_Settings::getWindowHeight()}), Engine_Constants::getGameTitle());
 
 	if (!window.setActive(false))
 	{

@@ -2,7 +2,7 @@
 #include "entities/player.h"
 #include "collisions.h"
 #include <SFML/Graphics.hpp>
-#include "core/constants.h"
+#include "core/configParser.h"
 #include "types/BlockID.h"
 #include "types/Direction.h"
 #include <cmath>
@@ -20,15 +20,15 @@ void movePlayer_X(Player &plr, Chunk &chunk, float newPos)
 
     float v = plr.getVelocity().x;
 
-    float oldleadingEdge_X = v > 0 ? (pos.x + TILE_SIZE) : pos.x;
-    float newleadingEdge_X = v > 0 ? (newPos + TILE_SIZE) : newPos;
+    float oldleadingEdge_X = v > 0 ? (pos.x + Engine_Constants::getTileSize()) : pos.x;
+    float newleadingEdge_X = v > 0 ? (newPos + Engine_Constants::getTileSize()) : newPos;
 
-    int startX = (int)std::floor(oldleadingEdge_X / TILE_SIZE);
-    int endX = (int)std::floor(newleadingEdge_X / TILE_SIZE);
+    int startX = (int)std::floor(oldleadingEdge_X / Engine_Constants::getTileSize());
+    int endX = (int)std::floor(newleadingEdge_X / Engine_Constants::getTileSize());
 
-    int topY = (int)std::floor((pos.y - TILE_SIZE)/TILE_SIZE);
-    int middleY = (int)std::floor(pos.y/TILE_SIZE);
-    int bottomY = (int)std::floor((pos.y + TILE_SIZE - 1.f)/TILE_SIZE);
+    int topY = (int)std::floor((pos.y - Engine_Constants::getTileSize())/Engine_Constants::getTileSize());
+    int middleY = (int)std::floor(pos.y/Engine_Constants::getTileSize());
+    int bottomY = (int)std::floor((pos.y + Engine_Constants::getTileSize() - 1.f)/Engine_Constants::getTileSize());
 
     int step = ((v > 0) ? 1 : -1);
 
@@ -36,7 +36,7 @@ void movePlayer_X(Player &plr, Chunk &chunk, float newPos)
     {
         if (checkSOLID(chunk.getBlock(bottomY, i)) || checkSOLID(chunk.getBlock(middleY, i)) || checkSOLID(chunk.getBlock(topY, i)))
         {
-            newPos = v > 0 ? (i * TILE_SIZE - TILE_SIZE) : (i * TILE_SIZE + TILE_SIZE);
+            newPos = v > 0 ? (i * Engine_Constants::getTileSize() - Engine_Constants::getTileSize()) : (i * Engine_Constants::getTileSize() + Engine_Constants::getTileSize());
             break;
         }
     }
@@ -50,17 +50,17 @@ void movePlayer_Y(Player &plr, Chunk &chunk, float newPos)
     sf::Vector2f oldPos = plr.getPos();
     float v = plr.getVelocity().y;
 
-    float oldleadingEdge_Y = v > 0 ? (oldPos.y + TILE_SIZE) : (oldPos.y - TILE_SIZE);
-    float newleadingEdge_Y = v > 0 ? (newPos + TILE_SIZE) : (newPos - TILE_SIZE);
+    float oldleadingEdge_Y = v > 0 ? (oldPos.y + Engine_Constants::getTileSize()) : (oldPos.y - Engine_Constants::getTileSize());
+    float newleadingEdge_Y = v > 0 ? (newPos + Engine_Constants::getTileSize()) : (newPos - Engine_Constants::getTileSize());
 
-    int startY = (int)std::floor(oldleadingEdge_Y / TILE_SIZE);
-    int endY = (int)std::floor(newleadingEdge_Y / TILE_SIZE);
+    int startY = (int)std::floor(oldleadingEdge_Y / Engine_Constants::getTileSize());
+    int endY = (int)std::floor(newleadingEdge_Y / Engine_Constants::getTileSize());
 
     bool hitfloor = false;
 
-    int leftX = (int)std::floor(oldPos.x / TILE_SIZE);
+    int leftX = (int)std::floor(oldPos.x / Engine_Constants::getTileSize());
 
-    int rightX = (int)(std::floor)((oldPos.x + TILE_SIZE - 1.f) / TILE_SIZE);
+    int rightX = (int)(std::floor)((oldPos.x + Engine_Constants::getTileSize() - 1.f) / Engine_Constants::getTileSize());
 
     int step = ((v > 0) ? 1 : -1);
 
@@ -72,14 +72,14 @@ void movePlayer_Y(Player &plr, Chunk &chunk, float newPos)
             plr.setVelocity_Y(0);
             if (v > 0)
             {
-                newPos = (i * TILE_SIZE - TILE_SIZE);
+                newPos = (i * Engine_Constants::getTileSize() - Engine_Constants::getTileSize());
                 plr.setGrounded(true);
                 hitfloor = true;
             }
             else if (v < 0)
             {
 
-                newPos = (i * TILE_SIZE + 2 * TILE_SIZE);
+                newPos = (i * Engine_Constants::getTileSize() + 2 * Engine_Constants::getTileSize());
             }
             break;
         }

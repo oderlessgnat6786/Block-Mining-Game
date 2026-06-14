@@ -9,4 +9,6 @@ class Filepaths {
     public:
         static void init(const std::string& path);
         static std::string getAsset(std::string path);
+        static std::string getConfig(std::string path);
+        
 };

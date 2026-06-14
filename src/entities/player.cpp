@@ -1,6 +1,6 @@
 #include "player.h"
 #include <SFML/Graphics.hpp>
-#include "core/constants.h"
+#include "core/configParser.h"
 #include "physics/unitConverter.h"
 #include <cmath>
 
@@ -10,8 +10,8 @@ Player::Player(sf::Vector2i spawnPos, int hp,float speed, float jumpPower)
     this->speed = convertToBlockUnits(speed);
     blockPos = spawnPos;
     this->hp = hp;
-    pos = sf::Vector2f({(float)blockPos.x*TILE_SIZE,(float)blockPos.y*TILE_SIZE});
-    this->jumpPower = std::sqrt(2*GRAVITY*convertToBlockUnits(jumpPower));
+    pos = sf::Vector2f({(float)blockPos.x*Engine_Constants::getTileSize(),(float)blockPos.y*Engine_Constants::getTileSize()});
+    this->jumpPower = std::sqrt(2*Engine_Constants::getGravity()*convertToBlockUnits(jumpPower));
     onGround = true;
 }
 
@@ -67,7 +67,7 @@ Direction Player::getDirection(){
 
 void Player::updatePos(sf::Vector2f pos){
     this->pos = pos;
-    blockPos = sf::Vector2i({(int)std::floor(pos.x/TILE_SIZE),(int)std::floor(pos.y/TILE_SIZE)});
+    blockPos = sf::Vector2i({(int)std::floor(pos.x/Engine_Constants::getTileSize()),(int)std::floor(pos.y/Engine_Constants::getTileSize())});
 }
 
 int Player::getHealth(){
