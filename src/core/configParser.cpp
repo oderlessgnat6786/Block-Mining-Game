@@ -16,6 +16,8 @@ void Engine_Constants::load()
         {
             toml::table config = toml::parse_file(Filepaths::getConfig("engine_constants.toml"));
 
+
+            seed = config["WorldGen"]["seed"].value_or(seed);
             chunkHeight = config["WorldGen"]["chunkHeight"].value_or(chunkHeight);
             chunkWidth = config["WorldGen"]["chunkWidth"].value_or(chunkWidth);
             surfaceMin = config["WorldGen"]["surfaceMin"].value_or(surfaceMin);
@@ -43,8 +45,8 @@ void Engine_Constants::load()
             std::cerr << err.description() << std::endl;
         }
     }
-    GRAVITY=GRAVITY*TILE_SIZE;
-    FALL_SPEED*=TILE_SIZE;
+    GRAVITY = GRAVITY * TILE_SIZE;
+    FALL_SPEED *= TILE_SIZE;
 }
 
 int Engine_Constants::getChunkHeight() { return chunkHeight; }
@@ -64,7 +66,7 @@ float Engine_Constants::getHealth() { return health; }
 float Engine_Constants::getSpeed() { return speed; }
 float Engine_Constants::getJumpPower() { return jumpPower; }
 bool Engine_Constants::getDevMode() { return devMode; }
-
+unsigned Engine_Constants::getSeed() { return seed; }
 // USER_SETTINGS
 
 void User_Settings::load()
@@ -127,8 +129,8 @@ void User_Settings::restore_defaults()
 
 int User_Settings::getBlockRadius()
 {
-    int maxDimension = std::max(WINDOW_HEIGHT,WINDOW_WIDTH);
-    return (maxDimension/Engine_Constants::getTileSize())/2 + 2;
+    int maxDimension = std::max(WINDOW_HEIGHT, WINDOW_WIDTH);
+    return (maxDimension / Engine_Constants::getTileSize()) / 2 + 2;
 }
 
 unsigned User_Settings::getWindowWidth() { return WINDOW_WIDTH; }

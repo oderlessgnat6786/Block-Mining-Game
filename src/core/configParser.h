@@ -7,7 +7,7 @@ private:
     //  -------- ENGINE -------------
 
     // CHUNK
-
+    inline static unsigned seed = 0;
     inline static int chunkHeight = 64;
     inline static int chunkWidth = 64;
     inline static int surfaceMin = 30;
@@ -56,6 +56,7 @@ public:
     static float getSpeed();
     static float getJumpPower();
     static bool getDevMode();
+    static unsigned getSeed();
 };
 
 class User_Settings

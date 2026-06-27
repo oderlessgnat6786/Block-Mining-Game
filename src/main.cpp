@@ -59,6 +59,10 @@ int main(int argI, char *args[])
 				window.close();
 
 				break;
+			}else if(event->is<sf::Event::Resized>()){
+				sf::Vector2u size = window.getSize();
+				User_Settings::setWindowHeight(size.y);
+				User_Settings::setWindowWidth(size.x);
 			}
 			// else if(const auto* keyPressed = event->getIf<sf::Event::KeyPressed>()){
 			// if (keyPressed->scancode == sf::Keyboard::Scancode::D){

@@ -1,4 +1,5 @@
 #include "perlin_noise.h"
+#include "configParser.h"
 #include <math.h>
 
 //tutorial: https://www.youtube.com/watch?v=kCIaHqb60Cw (channel name: ZIPPED)
@@ -12,7 +13,7 @@ vector2d randomGradient(int Gx, int Gy){
     
     const unsigned w = 8 * sizeof(unsigned);
     const unsigned s = w / 2; 
-    unsigned a = Gx, b = Gy;
+    unsigned a = Gx^Engine_Constants::getSeed(), b = Gy^Engine_Constants::getSeed();
     a *= 3284157443;
  
     b ^= a << s | a >> w - s;
