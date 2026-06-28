@@ -7,7 +7,7 @@
 
 BlockRegistry Registry;
 
-void renderChunk(Chunk &chunk, sf::Texture &tileset, sf::RenderWindow &window)
+void renderChunk(Chunk &chunk, sf::Texture &tileset,sf::Texture& highlightSet, sf::RenderWindow &window)
 {
     sf::Sprite blockSprite(tileset);
     for (int i = 0; i < chunk.getChunkHeight(); i++)

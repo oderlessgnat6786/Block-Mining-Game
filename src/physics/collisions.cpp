@@ -13,6 +13,35 @@ bool checkSOLID(BlockID block)
     return (block != BlockID::AIR && block != BlockID::NONE);
 }
 
+bool safeToPlaceBlock(sf::Vector2i pos, sf::Vector2f plrPos)
+{
+    float TILE_SIZE = (float)Engine_Constants::getTileSize();
+
+    struct AABB
+    {
+        float left;
+        float right;
+        float top; 
+        float bottom;
+    };
+
+    AABB plr = {
+        plrPos.x,
+        plrPos.x + TILE_SIZE,
+        plrPos.y - TILE_SIZE,
+        plrPos.y + TILE_SIZE};
+
+    AABB sel{
+        pos.x * TILE_SIZE,
+        (pos.x*TILE_SIZE) + TILE_SIZE,
+        pos.y * TILE_SIZE,
+        (pos.y*TILE_SIZE) + TILE_SIZE};
+
+    bool intersecting = (plr.left < sel.right && plr.right > sel.left && plr.top < sel.bottom && plr.bottom > sel.top);
+
+    return !intersecting;
+}
+
 void movePlayer_X(Player &plr, Chunk &chunk, float newPos)
 {
 

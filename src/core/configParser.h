@@ -30,14 +30,14 @@ private:
     inline static float health = 100;
     inline static float speed = 2;
     inline static float jumpPower = 2;
+    inline static float miningSpeed = 35;
 
     inline static bool devMode = 0;
 
 public:
-
     static void load();
 
-    //GETTERS
+    // GETTERS
 
     static int getChunkHeight();
     static int getChunkWidth();
@@ -55,6 +55,7 @@ public:
     static float getHealth();
     static float getSpeed();
     static float getJumpPower();
+    static float getMiningSpeed();
     static bool getDevMode();
     static unsigned getSeed();
 };

@@ -22,4 +22,6 @@ class Block{
 
         Block(BlockID name, int X, int Y, float durability, BlockType type,ItemID item);
         
+        float getDurability() const;
+
 };

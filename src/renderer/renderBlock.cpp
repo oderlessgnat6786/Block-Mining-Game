@@ -7,7 +7,6 @@
 
 #include "core/configParser.h"
 
-sf::Texture tileset("assets/textures/blocks.png");
 
 void renderBlock(const Block &block, sf::RenderWindow &window, sf::Sprite &blockSprite, sf::Vector2i &pos)
 {

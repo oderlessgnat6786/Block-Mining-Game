@@ -3,10 +3,21 @@
 #include "core/configParser.h"
 #include "physics/unitConverter.h"
 #include <cmath>
+#include "types/BlockID.h"
+#include "world/chunk.h"
+#include "blocks/BlockRegistry.h"
+#include "blocks/block.h"
 
-Player::Player(sf::Vector2i spawnPos, int hp,float speed, float jumpPower)
+Player::Player(sf::Vector2i spawnPos, int hp,float speed, float jumpPower,float miningSpeed)
 {
-    //this->speed = speed;
+    
+    ActiveMine.mining = false;
+    ActiveMine.targetPos = sf::Vector2i(-1,-1);
+    ActiveMine.damage = 0.f;
+    ActiveMine.durability = 100.f;
+
+
+    this->miningSpeed = miningSpeed;
     this->speed = convertToBlockUnits(speed);
     blockPos = spawnPos;
     this->hp = hp;
@@ -14,6 +25,8 @@ Player::Player(sf::Vector2i spawnPos, int hp,float speed, float jumpPower)
     this->jumpPower = std::sqrt(2*Engine_Constants::getGravity()*convertToBlockUnits(jumpPower));
     onGround = true;
 }
+
+
 
 sf::Vector2i Player::getBlockPos(){
     return blockPos;
@@ -37,6 +50,63 @@ sf::Vector2f Player::getPos(){
 
 sf::Vector2f Player::getVelocity(){
     return velocity;
+}
+
+sf::Vector2i Player::getMiningTargetPos()
+{
+    return ActiveMine.targetPos;
+}
+
+float Player::getMiningSpeed()
+{
+    return miningSpeed;
+}
+
+float Player::getMiningProgress()
+{
+    if (ActiveMine.durability <= 0.f) return 0.f;
+    return (ActiveMine.damage/ActiveMine.durability);
+}
+
+void Player::setMiningSpeed(float miningSpeed)
+{
+    this->miningSpeed = miningSpeed;
+}
+
+bool Player::isMining()
+{
+    return ActiveMine.mining;
+}
+
+void Player::mine(sf::Vector2i pos, Chunk &chunk, const BlockRegistry &registry, float dt)
+{
+    BlockID id = chunk.getBlock(pos.y,pos.x);
+
+    if (ActiveMine.targetPos != pos){
+        resetMining();
+    }
+
+    if (id != BlockID::AIR && id != BlockID::NONE && id != BlockID::BARRIER){
+        ActiveMine.mining = true;
+        ActiveMine.targetPos = pos;
+        const Block& block = registry.getBlockDefinition(id);
+        ActiveMine.durability = block.getDurability();
+        ActiveMine.damage += miningSpeed*dt;
+        
+        if (ActiveMine.damage >= ActiveMine.durability){
+            chunk.setBlock(pos.y,pos.x,BlockID::AIR);
+            resetMining();
+        }
+
+    }
+}
+
+void Player::resetMining()
+{
+    ActiveMine.mining = false;
+    ActiveMine.targetPos = sf::Vector2i(-1,-1);
+    ActiveMine.damage = 0.f;
+    ActiveMine.durability = 100.f;
 }
 
 float Player::getJumpPower(){

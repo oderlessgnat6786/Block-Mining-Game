@@ -2,6 +2,8 @@
 #include <vector>
 #include <SFML/Graphics.hpp>
 #include "types/Direction.h"
+#include "world/chunk.h"
+#include "blocks/BlockRegistry.h"
 
 class Player
 {
@@ -16,18 +18,44 @@ private:
 
     int hp; // player health
 
-    float jumpPower; //jump power
+    float jumpPower; // jump power
 
     bool onGround;
+
+    float miningSpeed; // mining speed multiplier for block mining
+
+    struct
+    {
+        bool mining;
+        sf::Vector2i targetPos;
+        float damage;
+        float durability;
+    } ActiveMine;
 
     Direction direction; // determines the players direction
 
 public:
-    Player(sf::Vector2i spawnPos, int hp, float speed, float jumpPower);
+    Player(sf::Vector2i spawnPos, int hp, float speed, float jumpPower, float miningSpeed);
 
     sf::Vector2i getBlockPos();
     sf::Vector2f getPos();
     sf::Vector2f getVelocity();
+    sf::Vector2i getMiningTargetPos();
+
+
+    float getMiningSpeed();
+
+    float getMiningProgress();
+
+    void setMiningSpeed(float miningSpeed);
+
+    bool isMining();
+
+    
+
+    void mine(sf::Vector2i pos, Chunk &chunk,const BlockRegistry& registry,float dt);
+
+    void resetMining();
 
     void setVelocity_X(float x);
 

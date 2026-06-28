@@ -16,7 +16,6 @@ void Engine_Constants::load()
         {
             toml::table config = toml::parse_file(Filepaths::getConfig("engine_constants.toml"));
 
-
             seed = config["WorldGen"]["seed"].value_or(seed);
             chunkHeight = config["WorldGen"]["chunkHeight"].value_or(chunkHeight);
             chunkWidth = config["WorldGen"]["chunkWidth"].value_or(chunkWidth);
@@ -35,6 +34,7 @@ void Engine_Constants::load()
             health = config["Player"]["health"].value_or(health);
             speed = config["Player"]["speed"].value_or(speed);
             jumpPower = config["Player"]["jumpPower"].value_or(jumpPower);
+            miningSpeed = config["Player"]["miningSpeed"].value_or(miningSpeed);
 
             TILE_SIZE = config["Window"]["TILE_SIZE"].value_or(TILE_SIZE);
             gameTitle = config["Window"]["gameTitle"].value_or(gameTitle);
@@ -65,6 +65,7 @@ float Engine_Constants::getSafeStep() { return safe_step; }
 float Engine_Constants::getHealth() { return health; }
 float Engine_Constants::getSpeed() { return speed; }
 float Engine_Constants::getJumpPower() { return jumpPower; }
+float Engine_Constants::getMiningSpeed(){ return miningSpeed; }
 bool Engine_Constants::getDevMode() { return devMode; }
 unsigned Engine_Constants::getSeed() { return seed; }
 // USER_SETTINGS

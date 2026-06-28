@@ -7,6 +7,7 @@ dirtMin = 2
 dirtMax = 5
 offsetX = 0
 offsetY = 0
+seed = 0
 
 [Physics]
 GRAVITY = 30.53 #in blocks/per second
@@ -17,6 +18,7 @@ safe_step = 30
 health = 100
 speed = 2 #in blocks/per second
 jumpPower = 2 #in blocks/per second
+miningSpeed = 35 #durability removed/per second
 
 [Window]
 TILE_SIZE = 121

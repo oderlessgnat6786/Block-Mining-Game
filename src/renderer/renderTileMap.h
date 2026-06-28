@@ -1,3 +1,3 @@
 #pragma once
 
-void renderChunk(Chunk &chunk, sf::Texture &tileset, sf::RenderWindow &window);
+void renderChunk(Chunk &chunk, sf::Texture &tileset,sf::Texture& highlightSet, sf::RenderWindow &window);
