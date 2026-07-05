@@ -7,35 +7,77 @@
 #include "types/Direction.h"
 #include <cmath>
 
-
 bool checkSOLID(BlockID block)
 {
     return (block != BlockID::AIR && block != BlockID::NONE);
 }
 
-bool safeToPlaceBlock(sf::Vector2i pos, sf::Vector2f plrPos)
+void nudgePlayer(sf::Vector2i pos, Player &player)
 {
+
+    sf::Vector2f plrPos = player.getPos();
+
     float TILE_SIZE = (float)Engine_Constants::getTileSize();
 
     struct AABB
     {
         float left;
         float right;
-        float top; 
+        float top;
         float bottom;
     };
 
     AABB plr = {
         plrPos.x,
-        plrPos.x + TILE_SIZE,
-        plrPos.y - TILE_SIZE,
-        plrPos.y + TILE_SIZE};
+        (plrPos.x + TILE_SIZE),
+        (plrPos.y - TILE_SIZE),
+        (plrPos.y + TILE_SIZE)};
 
     AABB sel{
         pos.x * TILE_SIZE,
-        (pos.x*TILE_SIZE) + TILE_SIZE,
+        (pos.x * TILE_SIZE) + TILE_SIZE,
         pos.y * TILE_SIZE,
-        (pos.y*TILE_SIZE) + TILE_SIZE};
+        (pos.y * TILE_SIZE) + TILE_SIZE};
+
+    bool intersecting = (plr.left < sel.right && plr.right > sel.left && plr.top < sel.bottom && plr.bottom > sel.top);
+    if (intersecting)
+    {
+        plrPos.y = sel.top - TILE_SIZE;
+        player.updatePos(plrPos);
+        if (player.getVelocity().y > 0)
+        {
+            player.setVelocity_Y(0.f);
+            player.setGrounded(true);
+        }
+    }
+}
+
+bool safeToPlaceBlock(sf::Vector2i pos, sf::Vector2f plrPos)
+{
+    float TILE_SIZE = (float)Engine_Constants::getTileSize();
+
+    float margin = 0.1f;
+    float feetMargin = 0.3f * TILE_SIZE;
+
+    struct AABB
+    {
+        float left;
+        float right;
+        float top;
+        float bottom;
+    };
+
+    AABB plr = {
+        plrPos.x + margin,
+        (plrPos.x + TILE_SIZE) - margin,
+        (plrPos.y - TILE_SIZE) + margin,
+        (plrPos.y + TILE_SIZE) - feetMargin};
+
+    AABB sel{
+        pos.x * TILE_SIZE,
+        (pos.x * TILE_SIZE) + TILE_SIZE,
+        pos.y * TILE_SIZE,
+        (pos.y * TILE_SIZE) + TILE_SIZE};
 
     bool intersecting = (plr.left < sel.right && plr.right > sel.left && plr.top < sel.bottom && plr.bottom > sel.top);
 
@@ -55,9 +97,9 @@ void movePlayer_X(Player &plr, Chunk &chunk, float newPos)
     int startX = (int)std::floor(oldleadingEdge_X / Engine_Constants::getTileSize());
     int endX = (int)std::floor(newleadingEdge_X / Engine_Constants::getTileSize());
 
-    int topY = (int)std::floor((pos.y - Engine_Constants::getTileSize())/Engine_Constants::getTileSize());
-    int middleY = (int)std::floor(pos.y/Engine_Constants::getTileSize());
-    int bottomY = (int)std::floor((pos.y + Engine_Constants::getTileSize() - 1.f)/Engine_Constants::getTileSize());
+    int topY = (int)std::floor((pos.y - Engine_Constants::getTileSize()) / Engine_Constants::getTileSize());
+    int middleY = (int)std::floor(pos.y / Engine_Constants::getTileSize());
+    int bottomY = (int)std::floor((pos.y + Engine_Constants::getTileSize() - 1.f) / Engine_Constants::getTileSize());
 
     int step = ((v > 0) ? 1 : -1);
 

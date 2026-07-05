@@ -8,15 +8,18 @@
 #include "types/BlockID.h"
 #include "entities/player.h"
 #include "blocks/BlockRegistry.h"
+#include "physics/collisions.h"
 
-void input_mine(std::optional<sf::Vector2i> selectedBlock,Chunk& chunk,Player& plr, const BlockRegistry& registry,float dt)
+BlockID currentBlock = BlockID::DIRT;
+
+void input_mineBlock(std::optional<sf::Vector2i> selectedBlock, Chunk &chunk, Player &plr, const BlockRegistry &registry, float dt)
 {
 
     if (sf::Mouse::isButtonPressed(sf::Mouse::Button::Left))
     {
         if (selectedBlock.has_value())
         {
-            plr.mine(selectedBlock.value(), chunk, registry,dt);
+            plr.mine(selectedBlock.value(), chunk, registry, dt);
         }
         else
         {
@@ -26,6 +29,24 @@ void input_mine(std::optional<sf::Vector2i> selectedBlock,Chunk& chunk,Player& p
     else
     {
         plr.resetMining();
+    }
+}
+
+void input_placeBlock(std::optional<sf::Vector2i> selectedBlock, Chunk &chunk, Player &plr, const BlockRegistry &registry, bool& buttonPressed)
+{
+
+    if (buttonPressed)
+    {
+        buttonPressed = false;
+        if (selectedBlock.has_value())
+        {
+            sf::Vector2i pos = selectedBlock.value();
+            if (chunk.getBlock(pos.y, pos.x) == BlockID::AIR && safeToPlaceBlock(pos,plr.getPos()))
+            {
+                chunk.setBlock(pos.y, pos.x, currentBlock);
+                nudgePlayer(pos,plr);
+            }
+        }
     }
 }
 
