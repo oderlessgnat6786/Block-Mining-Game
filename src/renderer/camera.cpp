@@ -12,7 +12,7 @@ void renderCamera(sf::RenderWindow& window, sf::View& camera, sf::Vector2f targe
     sf::Vector2f cameraPos;
 
     float halfView = viewWidth/2.f;
-
+    float halfViewHeight = viewHeight/2.f;
 	cameraPos.x= target_pos.x + (float)TILE_SIZE / 2.f;
 	cameraPos.y = target_pos.y + (float)TILE_SIZE / 2.f;
 
@@ -22,10 +22,10 @@ void renderCamera(sf::RenderWindow& window, sf::View& camera, sf::Vector2f targe
     if (cameraPos.x > chunkWidth*TILE_SIZE - halfView - TILE_SIZE)
         cameraPos.x = chunkWidth*TILE_SIZE - halfView - TILE_SIZE;
 
-    if (cameraPos.y < halfView + TILE_SIZE){
-        cameraPos.y = halfView + TILE_SIZE;
+    if (cameraPos.y < halfViewHeight+ TILE_SIZE){
+       cameraPos.y = halfViewHeight + TILE_SIZE;
     }
-
+    
     camera.setCenter(cameraPos);
 
     camera.setSize(sf::Vector2f(viewWidth,viewHeight));
