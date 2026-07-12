@@ -17,8 +17,8 @@ void tickGameplay(Player& plr, plrInput& inputData, Chunk& chunk, std::atomic<bo
         
         auto selectedBlock = input_getSelectedBlock(inputData.mousePos,plr.getPos());
         
-        input_mine(selectedBlock,chunk,plr,registry,dt);
-        
+        input_mineBlock(selectedBlock,chunk,plr,registry,dt);
+        input_placeBlock(selectedBlock,chunk,plr,registry,inputData.isRightClicking);
         input_Movement(plr);
         update(plr,chunk,dt);
 

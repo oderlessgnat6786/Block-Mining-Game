@@ -26,14 +26,13 @@ int main(int argI, char *args[])
 	Engine_Constants::load();
 	BlockRegistry registry;
 
-
-	Chunk ob = Chunk(Engine_Constants::getChunkHeight(),Engine_Constants::getChunkWidth(),Engine_Constants::getSurfaceMin(),Engine_Constants::getSurfaceMax(),Engine_Constants::getDirtMin(),Engine_Constants::getDirtMax(),Engine_Constants::getOffsetX(),Engine_Constants::getOffsetY());
+	Chunk ob = Chunk(Engine_Constants::getChunkHeight(), Engine_Constants::getChunkWidth(), Engine_Constants::getSurfaceMin(), Engine_Constants::getSurfaceMax(), Engine_Constants::getDirtMin(), Engine_Constants::getDirtMax(), Engine_Constants::getOffsetX(), Engine_Constants::getOffsetY());
 
 	std::vector<int> pos = ob.getSpawnPos();
 
-	Player plr(sf::Vector2i({pos.at(0), pos.at(1)}),Engine_Constants::getHealth(),Engine_Constants::getSpeed(),Engine_Constants::getJumpPower(),Engine_Constants::getMiningSpeed());
+	Player plr(sf::Vector2i({pos.at(0), pos.at(1)}), Engine_Constants::getHealth(), Engine_Constants::getSpeed(), Engine_Constants::getJumpPower(), Engine_Constants::getMiningSpeed());
 
-	sf::RenderWindow window(sf::VideoMode({User_Settings::getWindowWidth(),User_Settings::getWindowHeight()}), Engine_Constants::getGameTitle());
+	sf::RenderWindow window(sf::VideoMode({User_Settings::getWindowWidth(), User_Settings::getWindowHeight()}), Engine_Constants::getGameTitle());
 
 	if (!window.setActive(false))
 	{
@@ -45,9 +44,7 @@ int main(int argI, char *args[])
 	plrInput inputData;
 
 	std::thread render(renderWindow, std::ref(window), std::ref(running), std::ref(ob), std::ref(plr));
-	std::thread tickThread(tickGameplay, std::ref(plr),std::ref(inputData),std::ref(ob),std::ref(running));
-
-
+	std::thread tickThread(tickGameplay, std::ref(plr), std::ref(inputData), std::ref(ob), std::ref(running));
 
 	while (window.isOpen())
 	{
@@ -63,24 +60,25 @@ int main(int argI, char *args[])
 				window.close();
 
 				break;
-			}else if(event->is<sf::Event::Resized>()){
+			}
+			else if (event->is<sf::Event::Resized>())
+			{
 				sf::Vector2u size = window.getSize();
 				User_Settings::setWindowHeight(size.y);
 				User_Settings::setWindowWidth(size.x);
 			}
-
-			
-
 		}
-		
+
 		inputData.isLeftClicking = sf::Mouse::isButtonPressed(sf::Mouse::Button::Left);
-			if (inputData.isLeftClicking){
-				sf::View camera = window.getView();
-				inputData.mousePos = window.mapPixelToCoords(sf::Mouse::getPosition(window),camera);
-			}
+		inputData.isRightClicking = sf::Mouse::isButtonPressed(sf::Mouse::Button::Right);
+		
+		if (inputData.isLeftClicking || inputData.isRightClicking)
+		{
+			sf::View camera = window.getView();
+			inputData.mousePos = window.mapPixelToCoords(sf::Mouse::getPosition(window), camera);
+		}
 
 		sf::sleep(sf::Time(sf::milliseconds(1)));
-		
 	}
 
 	if (render.joinable())

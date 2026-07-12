@@ -8,15 +8,18 @@
 #include "types/BlockID.h"
 #include "entities/player.h"
 #include "blocks/BlockRegistry.h"
+#include "physics/collisions.h"
 
-void input_mine(std::optional<sf::Vector2i> selectedBlock,Chunk& chunk,Player& plr, const BlockRegistry& registry,float dt)
+BlockID currentBlock = BlockID::DIRT;
+
+void input_mineBlock(std::optional<sf::Vector2i> selectedBlock, Chunk &chunk, Player &plr, const BlockRegistry &registry, float dt)
 {
 
     if (sf::Mouse::isButtonPressed(sf::Mouse::Button::Left))
     {
         if (selectedBlock.has_value())
         {
-            plr.mine(selectedBlock.value(), chunk, registry,dt);
+            plr.mine(selectedBlock.value(), chunk, registry, dt);
         }
         else
         {
@@ -29,22 +32,48 @@ void input_mine(std::optional<sf::Vector2i> selectedBlock,Chunk& chunk,Player& p
     }
 }
 
+void input_placeBlock(std::optional<sf::Vector2i> selectedBlock, Chunk &chunk, Player &plr, const BlockRegistry &registry, bool &buttonPressed)
+{
+
+    if (buttonPressed)
+    {
+        //buttonPressed = false;
+        if (selectedBlock.has_value())
+        {
+            sf::Vector2i pos = selectedBlock.value();
+            if (chunk.getBlock(pos.y, pos.x) == BlockID::AIR && safeToPlaceBlock(pos, plr.getPos()))
+            {
+
+                bool hasNeighbor = (checkSOLID(chunk.getBlock(pos.y + 1, pos.x)) ||
+                                    checkSOLID(chunk.getBlock(pos.y - 1, pos.x)) ||
+                                    checkSOLID(chunk.getBlock(pos.y, pos.x + 1)) ||
+                                    checkSOLID(chunk.getBlock(pos.y, pos.x - 1)));
+                if (hasNeighbor)
+                {
+                    chunk.setBlock(pos.y, pos.x, currentBlock);
+                    nudgePlayer(pos, plr);
+                }
+            }
+        }
+    }
+}
+
 std::optional<sf::Vector2i> input_getSelectedBlock(sf::Vector2f mousePos, sf::Vector2f plrPos)
 {
     sf::Vector2i chunkPos;
 
-    chunkPos.x = mousePos.x / Engine_Constants::getTileSize();
-    chunkPos.y = mousePos.y / Engine_Constants::getTileSize();
+    chunkPos.x = (int)std::floor(mousePos.x / Engine_Constants::getTileSize());
+    chunkPos.y = (int)std::floor(mousePos.y / Engine_Constants::getTileSize());
 
     int x_Radius = std::abs(chunkPos.x - (int)std::floor(plrPos.x / Engine_Constants::getTileSize()));
 
     int y_Radius = chunkPos.y - (int)std::floor(plrPos.y / Engine_Constants::getTileSize());
 
-    bool ex1 = x_Radius <= 1 && y_Radius >= -2 && y_Radius <= 1; // checks whether the blocks around are within 1 block radius of the player
+    //bool ex1 = x_Radius == 0 && (y_Radius == 0 || y_Radius == -1); // checks whether the blocks are inside the player's hitboxes
 
-    bool ex2 = x_Radius == 0 && (y_Radius == 0 || y_Radius == -1); // checks whether the blocks are inside the player's hitboxes
+    bool ex = x_Radius <= 1 && y_Radius >= -2 && y_Radius <= 1; // checks whether the blocks around are within 1 block radius of the player
 
-    if (ex1 && !ex2)
+    if (ex)
     {
         return chunkPos;
     }
