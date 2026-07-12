@@ -66,14 +66,11 @@ int main(int argI, char *args[])
 				sf::Vector2u size = window.getSize();
 				User_Settings::setWindowHeight(size.y);
 				User_Settings::setWindowWidth(size.x);
-			}else if (const auto* button = event->getIf<sf::Event::MouseButtonPressed>()){
-				if (button->button == sf::Mouse::Button::Right){
-					inputData.isRightClicking = true;
-				}
 			}
 		}
 
 		inputData.isLeftClicking = sf::Mouse::isButtonPressed(sf::Mouse::Button::Left);
+		inputData.isRightClicking = sf::Mouse::isButtonPressed(sf::Mouse::Button::Right);
 		
 		if (inputData.isLeftClicking || inputData.isRightClicking)
 		{
